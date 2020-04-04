@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -31,22 +30,29 @@ jobs:
           sudo ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
+          
     - name: Clone source code
       env: 
         REPO_URL: https://github.com/Lienol/openwrt
         REPO_BRANCH: dev-19.07
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+      
+    - name: Clone Config
+      env: 
+        REPO_URL: https://github.com/Lienol/openwrt-actions
+      run: git clone --depth 1 $REPO_URL openwrt-config
+      
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
     
-    - name: Costom configure file
+    - name: Custom configure file
       run: |
           cd openwrt
           rm -f .config
-          cp ../x64-1907 .config
+          cp ../openwrt-config/x64-1907 .config
           
     - name: Make Defconfig
       run: |
