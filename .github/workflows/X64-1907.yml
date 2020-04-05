@@ -9,7 +9,7 @@ name: X64-1907
 
 on:
   schedule:
-    - cron: 55 23 * * *
+    - cron: 58 23 * * *
 #  push:
 #    branches: 
 #      - master
